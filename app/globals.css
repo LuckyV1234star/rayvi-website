@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant rayvi (@media (width >= 900px));
+
 :root {
   --bg: #131315;
   --surface: #131315;
@@ -15,6 +17,7 @@
   --hairline: rgba(229, 225, 228, 0.12);
   --demo-accent: #b5c4ff;
   --demo-on: #1d2d5f;
+  --demo-secondary: #e9c349;
 }
 
 @theme inline {

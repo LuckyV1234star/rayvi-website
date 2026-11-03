@@ -32,21 +32,21 @@ export default function Home() {
           <Exhibit
             id="calendar"
             title="Calendar"
-            lede="One sample week. On a wide screen it is the week grid. On a phone it is the day list. Open an event for the time and the place."
+            lede="One sample week. Wide screens show the week timeline. Phones show the day timeline. Open an event for the time and the place."
           >
             <CalendarDemo />
           </Exhibit>
           <Exhibit
             id="expenses"
             title="Expenses"
-            lede="Three months of sample spending. The chart and the list move together."
+            lede="Three months of sample spending. Wide screens keep the line, pie, and bar together. Phones switch one chart slot."
           >
             <ExpensesDemo />
           </Exhibit>
           <Exhibit
             id="persona"
             title="Persona"
-            lede="Accent and tone. The window and phone frames in this gallery follow the accent."
+            lede="Appearance presets. The shell chrome in this gallery follows the accent."
           >
             <PersonaDemo />
           </Exhibit>

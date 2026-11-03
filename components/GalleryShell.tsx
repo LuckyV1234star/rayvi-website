@@ -7,13 +7,13 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { personaAccents } from "@/lib/demo-data";
+import { themePresets } from "@/lib/demo-data";
 
-type Accent = (typeof personaAccents)[number];
+type Preset = (typeof themePresets)[number];
 
 type GalleryAccentContextValue = {
-  accent: Accent;
-  setAccentId: (id: Accent["id"]) => void;
+  preset: Preset;
+  setPresetId: (id: Preset["id"]) => void;
 };
 
 const GalleryAccentContext = createContext<GalleryAccentContextValue | null>(null);
@@ -27,16 +27,17 @@ export function useGalleryAccent() {
 }
 
 export function GalleryShell({ children }: { children: ReactNode }) {
-  const [accentId, setAccentId] = useState<Accent["id"]>("iris");
-  const accent = personaAccents.find((item) => item.id === accentId) ?? personaAccents[0];
+  const [presetId, setPresetId] = useState<Preset["id"]>("obsidian");
+  const preset = themePresets.find((item) => item.id === presetId) ?? themePresets[0];
 
   return (
-    <GalleryAccentContext.Provider value={{ accent, setAccentId }}>
+    <GalleryAccentContext.Provider value={{ preset, setPresetId }}>
       <div
         style={
           {
-            "--demo-accent": accent.accent,
-            "--demo-on": accent.onAccent,
+            "--demo-accent": preset.primary,
+            "--demo-on": preset.onPrimary,
+            "--demo-secondary": preset.secondary,
           } as CSSProperties
         }
       >

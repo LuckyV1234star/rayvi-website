@@ -37,6 +37,8 @@ export type CalendarEvent = {
   title: string;
   time: string;
   place: string;
+  startMin: number;
+  endMin: number;
 };
 
 export const sampleWeek = [
@@ -56,6 +58,8 @@ export const calendarEvents: CalendarEvent[] = [
     title: "Morning run",
     time: "7:00–7:45",
     place: "Riverside path",
+    startMin: 7 * 60,
+    endMin: 7 * 60 + 45,
   },
   {
     id: "dentist",
@@ -63,6 +67,8 @@ export const calendarEvents: CalendarEvent[] = [
     title: "Dentist",
     time: "10:30–11:15",
     place: "City Clinic",
+    startMin: 10 * 60 + 30,
+    endMin: 11 * 60 + 15,
   },
   {
     id: "standup",
@@ -70,6 +76,8 @@ export const calendarEvents: CalendarEvent[] = [
     title: "Studio standup",
     time: "9:30–9:50",
     place: "Home",
+    startMin: 9 * 60 + 30,
+    endMin: 9 * 60 + 50,
   },
   {
     id: "review",
@@ -77,6 +85,8 @@ export const calendarEvents: CalendarEvent[] = [
     title: "Design review",
     time: "15:00–16:00",
     place: "Studio",
+    startMin: 15 * 60,
+    endMin: 16 * 60,
   },
   {
     id: "dinner",
@@ -84,6 +94,8 @@ export const calendarEvents: CalendarEvent[] = [
     title: "Dinner",
     time: "19:00–21:00",
     place: "Lantern",
+    startMin: 19 * 60,
+    endMin: 21 * 60,
   },
   {
     id: "market",
@@ -91,6 +103,8 @@ export const calendarEvents: CalendarEvent[] = [
     title: "Market",
     time: "11:00–12:30",
     place: "Harbor market",
+    startMin: 11 * 60,
+    endMin: 12 * 60 + 30,
   },
 ];
 
@@ -105,6 +119,9 @@ export type ExpenseItem = {
 export type ExpenseMonth = {
   id: string;
   label: string;
+  chip: string;
+  intake: number;
+  daily: number[];
   categories: { name: string; amount: number }[];
   items: ExpenseItem[];
 };
@@ -113,6 +130,9 @@ export const expenseMonths: ExpenseMonth[] = [
   {
     id: "2026-09",
     label: "September",
+    chip: "Sep 2026",
+    intake: 2100,
+    daily: [12, 40, 18, 64, 22, 0, 36, 48, 15, 70, 20, 8, 55, 30],
     categories: [
       { name: "Food", amount: 286 },
       { name: "Transit", amount: 74 },
@@ -130,6 +150,9 @@ export const expenseMonths: ExpenseMonth[] = [
   {
     id: "2026-10",
     label: "October",
+    chip: "Oct 2026",
+    intake: 2100,
+    daily: [18, 24, 40, 12, 80, 16, 22, 36, 90, 14, 28, 44, 10, 60],
     categories: [
       { name: "Food", amount: 340 },
       { name: "Transit", amount: 92 },
@@ -147,6 +170,9 @@ export const expenseMonths: ExpenseMonth[] = [
   {
     id: "2026-11",
     label: "November",
+    chip: "This Month",
+    intake: 2400,
+    daily: [40, 18, 48, 22, 12, 8, 30, 16, 0, 26, 14, 20, 10, 6],
     categories: [
       { name: "Food", amount: 148 },
       { name: "Transit", amount: 40 },
@@ -163,10 +189,31 @@ export const expenseMonths: ExpenseMonth[] = [
   },
 ];
 
-export const personaAccents = [
-  { id: "iris", label: "Iris", accent: "#B5C4FF", onAccent: "#1D2D5F" },
-  { id: "gold", label: "Gold", accent: "#E9C349", onAccent: "#3B2F00" },
-  { id: "veil", label: "Veil", accent: "#7F8EC7", onAccent: "#1D2D5F" },
+export const themePresets = [
+  {
+    id: "obsidian",
+    name: "Obsidian",
+    primary: "#B5C4FF",
+    onPrimary: "#1D2D5F",
+    secondary: "#E9C349",
+    swatches: ["#131315", "#B5C4FF", "#7F8EC7", "#E9C349"],
+  },
+  {
+    id: "amber_noir",
+    name: "Amber Noir",
+    primary: "#F1C079",
+    onPrimary: "#3C2F00",
+    secondary: "#B5C4FF",
+    swatches: ["#14120E", "#F1C079", "#A87F3E", "#B5C4FF"],
+  },
+  {
+    id: "deep_sea",
+    name: "Deep Sea",
+    primary: "#9ED8E8",
+    onPrimary: "#0D1418",
+    secondary: "#F2C879",
+    swatches: ["#0D1418", "#9ED8E8", "#5C93A6", "#F2C879"],
+  },
 ] as const;
 
 export const personaTones = [
