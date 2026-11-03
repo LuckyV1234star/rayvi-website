@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { DemoFrame } from "@/components/DemoFrame";
+import { DeviceStage } from "@/components/DeviceStage";
 import { cannedReplies, openingChat } from "@/lib/demo-data";
 
 type ChatMessage = {
@@ -39,68 +39,70 @@ export function ChatDemo() {
   }
 
   return (
-    <DemoFrame label="Assistant">
-      <div className="flex flex-col gap-3" aria-live="polite">
-        {messages.map((message) => (
-          <p
-            key={message.id}
-            className={
-              message.role === "user"
-                ? "ml-8 rounded-2xl rounded-br-md border border-white/10 bg-container-high px-3 py-2 text-sm leading-relaxed"
-                : "mr-8 rounded-2xl rounded-bl-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm leading-relaxed"
-            }
+    <DeviceStage title="Assistant" active="Assistant">
+      <div className="flex h-full min-h-0 flex-col">
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-3 md:px-5" aria-live="polite">
+          {messages.map((message) => (
+            <p
+              key={message.id}
+              className={
+                message.role === "user"
+                  ? "ml-6 border border-white/10 bg-container-high px-3 py-2 text-sm leading-relaxed md:ml-16"
+                  : "mr-6 border border-(--demo-accent)/30 bg-(--demo-accent)/10 px-3 py-2 text-sm leading-relaxed md:mr-16"
+              }
+            >
+              <span className="mb-1 block font-mono text-[10px] tracking-[0.16em] text-muted uppercase">
+                {message.role === "user" ? "You" : "Rayvi"}
+              </span>
+              {message.text}
+            </p>
+          ))}
+        </div>
+        <div className="border-t border-white/10 px-3 py-3 md:px-5">
+          <div className="flex flex-col gap-2">
+            {cannedReplies.map((reply) => (
+              <button
+                key={reply.user}
+                type="button"
+                onClick={() => send(reply.user)}
+                className="min-h-11 border border-white/12 px-3 text-left text-sm text-on-surface hover:border-(--demo-accent)/60"
+              >
+                {reply.user}
+              </button>
+            ))}
+          </div>
+          <form
+            className="mt-3 flex flex-col gap-2 md:flex-row"
+            onSubmit={(event) => {
+              event.preventDefault();
+              send(draft);
+            }}
           >
-            <span className="mb-1 block font-mono text-[10px] tracking-[0.16em] text-muted uppercase">
-              {message.role === "user" ? "You" : "Rayvi"}
-            </span>
-            {message.text}
-          </p>
-        ))}
+            <label className="sr-only" htmlFor="chat-draft">
+              Reply
+            </label>
+            <input
+              id="chat-draft"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="Or type one of the replies above"
+              autoComplete="off"
+              className="min-h-11 flex-1 border border-white/10 bg-container-high px-3 text-sm text-on-surface placeholder:text-muted/70"
+            />
+            <button
+              type="submit"
+              className="min-h-11 bg-(--demo-accent) px-4 text-sm font-semibold text-(--demo-on)"
+            >
+              Send
+            </button>
+          </form>
+          {nudge ? (
+            <p className="mt-2 text-sm text-secondary" role="status">
+              {nudge}
+            </p>
+          ) : null}
+        </div>
       </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {cannedReplies.map((reply) => (
-          <button
-            key={reply.user}
-            type="button"
-            onClick={() => send(reply.user)}
-            className="min-h-11 rounded-full border border-white/15 bg-container-mid px-3 text-left text-sm text-on-surface motion-safe:transition-colors motion-safe:duration-200 hover:border-primary/50"
-          >
-            {reply.user}
-          </button>
-        ))}
-      </div>
-
-      <form
-        className="mt-4 flex flex-col gap-2 sm:flex-row"
-        onSubmit={(event) => {
-          event.preventDefault();
-          send(draft);
-        }}
-      >
-        <label className="sr-only" htmlFor="chat-draft">
-          Reply
-        </label>
-        <input
-          id="chat-draft"
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          placeholder="Or type one of the replies above"
-          autoComplete="off"
-          className="min-h-11 flex-1 rounded-xl border border-white/10 bg-container-high px-3 text-sm text-on-surface placeholder:text-muted/70"
-        />
-        <button
-          type="submit"
-          className="min-h-11 rounded-xl bg-primary px-4 text-sm font-semibold text-on-primary"
-        >
-          Send
-        </button>
-      </form>
-      {nudge ? (
-        <p className="mt-2 text-sm text-secondary" role="status">
-          {nudge}
-        </p>
-      ) : null}
-    </DemoFrame>
+    </DeviceStage>
   );
 }

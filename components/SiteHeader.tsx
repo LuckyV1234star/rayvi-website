@@ -17,7 +17,7 @@ export function SiteHeader() {
             <a
               key={link.href}
               href={link.href}
-              className="inline-flex min-h-11 items-center rounded-full px-2.5 font-mono text-[11px] tracking-[0.12em] text-muted uppercase motion-safe:transition-colors motion-safe:duration-200 hover:text-on-surface"
+              className="inline-flex min-h-11 items-center px-2 font-mono text-[11px] tracking-[0.16em] text-muted uppercase hover:text-on-surface"
             >
               {link.label}
             </a>
