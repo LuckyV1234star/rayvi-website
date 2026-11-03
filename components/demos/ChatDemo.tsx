@@ -1,42 +1,58 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useLocale } from "@/components/GalleryShell";
 import { GlassPanel } from "@/components/GlassPanel";
 import { RayviPortrait, RayviShell, RayviStatusLine } from "@/components/RayviShell";
-import { calendarEvents, cannedReplies, openingChat, sampleWeek } from "@/lib/demo-data";
+import { calendarEvents, sampleWeek } from "@/lib/demo-data";
+
+type ChatKey = "opening" | "lunch" | "coffee" | "brief";
 
 type ChatMessage = {
   id: string;
   role: "user" | "rayvi";
-  text: string;
+  key: ChatKey;
 };
 
-const dayLetters = ["S", "M", "T", "W", "T", "F", "S"];
+const replyKeys = ["lunch", "coffee", "brief"] as const;
 
 export function ChatDemo() {
-  const [messages, setMessages] = useState<ChatMessage[]>(openingChat);
+  const { t } = useLocale();
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { id: "u0", role: "user", key: "opening" },
+    { id: "r0", role: "rayvi", key: "opening" },
+  ]);
   const [draft, setDraft] = useState("");
-  const [nudge, setNudge] = useState<string | null>(null);
+  const [nudge, setNudge] = useState(false);
   const [day, setDay] = useState<(typeof sampleWeek)[number]["key"]>("wed");
   const idRef = useRef(2);
 
+  function line(message: ChatMessage) {
+    if (message.key === "opening") {
+      return message.role === "user" ? t.chat.openingUser : t.chat.openingRayvi;
+    }
+    const reply = t.chat.replies[replyKeys.indexOf(message.key)];
+    return message.role === "user" ? reply.user : reply.reply;
+  }
+
   function send(raw: string) {
     const text = raw.trim();
-    const match = cannedReplies.find(
+    const index = t.chat.replies.findIndex(
       (reply) => reply.user.toLowerCase() === text.toLowerCase(),
     );
-    if (!match) {
-      setNudge("Try one of these replies. This preview only knows those lines.");
+    if (index < 0) {
+      setNudge(true);
       return;
     }
+    const key = replyKeys[index];
     const userId = `m${idRef.current++}`;
     const rayviId = `m${idRef.current++}`;
-    setNudge(null);
+    setNudge(false);
     setDraft("");
     setMessages((current) => [
       ...current,
-      { id: userId, role: "user", text: match.user },
-      { id: rayviId, role: "rayvi", text: match.reply },
+      { id: userId, role: "user", key },
+      { id: rayviId, role: "rayvi", key },
     ]);
   }
 
@@ -50,7 +66,7 @@ export function ChatDemo() {
           <GlassPanel className="flex min-h-0 min-w-0 flex-1 flex-col">
             <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4 rayvi:p-6" aria-live="polite">
               {messages.map((message) => (
-                <Bubble key={message.id} message={message} />
+                <Bubble key={message.id} message={message} text={line(message)} />
               ))}
             </div>
             <form
@@ -68,26 +84,26 @@ export function ChatDemo() {
                   <CameraIcon />
                 </span>
                 <label className="sr-only" htmlFor="chat-draft">
-                  Message Rayvi
+                  {t.chat.placeholder}
                 </label>
                 <input
                   id="chat-draft"
                   value={draft}
                   onChange={(event) => setDraft(event.target.value)}
-                  placeholder="Message Rayvi…"
+                  placeholder={t.chat.placeholder}
                   autoComplete="off"
                   className="min-h-11 flex-1 bg-transparent px-2 text-sm text-on-surface placeholder:text-muted/70 rayvi:rounded-none"
                 />
                 <button
                   type="submit"
-                  aria-label="Send"
+                  aria-label={t.chat.send}
                   className="mb-0.5 hidden size-10 items-center justify-center text-(--demo-secondary) rayvi:inline-flex"
                 >
                   <SendIcon />
                 </button>
                 <button
                   type="submit"
-                  aria-label="Send"
+                  aria-label={t.chat.send}
                   className="inline-flex size-11 items-center justify-center rounded-lg bg-(--demo-accent) text-(--demo-on) rayvi:hidden"
                 >
                   <SendIcon />
@@ -115,11 +131,11 @@ export function ChatDemo() {
             <GlassPanel className="flex min-h-0 flex-[6] flex-col px-4 py-3">
               <div className="mb-3 h-0.5 bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--demo-accent)_40%,transparent),transparent)]" />
               <div className="flex items-center gap-2">
-                <p className="font-mono text-[11px] tracking-[0.16em]">Daily review</p>
-                <p className="ml-auto font-mono text-[11px] text-(--demo-accent)">Current week</p>
+                <p className="font-mono text-[11px] tracking-[0.16em]">{t.chat.daily}</p>
+                <p className="ml-auto font-mono text-[11px] text-(--demo-accent)">{t.chat.week}</p>
               </div>
               <div className="mt-3 grid grid-cols-7 text-center font-mono text-[10px] text-muted">
-                {dayLetters.map((letter, index) => (
+                {t.calendar.sunLetters.map((letter, index) => (
                   <span key={`${letter}-${index}`}>{letter}</span>
                 ))}
               </div>
@@ -145,12 +161,14 @@ export function ChatDemo() {
               </div>
               <ul className="mt-3 min-h-0 flex-1 space-y-2 overflow-y-auto border-t border-white/8 pt-2">
                 {dayEvents.length === 0 ? (
-                  <li className="py-4 text-center text-xs text-muted">Nothing scheduled.</li>
+                  <li className="py-4 text-center text-xs text-muted">{t.chat.empty}</li>
                 ) : (
                   dayEvents.map((event) => (
                     <li key={event.id} className="text-sm">
                       <span className="font-mono text-[11px] text-muted">{event.time}</span>
-                      <span className="mt-0.5 block">{event.title}</span>
+                      <span className="mt-0.5 block">
+                        {t.calendar.events[event.id as keyof typeof t.calendar.events].title}
+                      </span>
                     </li>
                   ))
                 )}
@@ -161,7 +179,7 @@ export function ChatDemo() {
       </div>
     </RayviShell>
     <div className="mx-auto mt-4 flex max-w-[23.5rem] flex-col gap-1 rayvi:max-w-none">
-      {cannedReplies.map((reply) => (
+      {t.chat.replies.map((reply) => (
         <button
           key={reply.user}
           type="button"
@@ -173,7 +191,7 @@ export function ChatDemo() {
       ))}
       {nudge ? (
         <p className="text-sm text-secondary" role="status">
-          {nudge}
+          {t.chat.nudge}
         </p>
       ) : null}
     </div>
@@ -181,7 +199,7 @@ export function ChatDemo() {
   );
 }
 
-function Bubble({ message }: { message: ChatMessage }) {
+function Bubble({ message, text }: { message: ChatMessage; text: string }) {
   const isUser = message.role === "user";
   return (
     <div className={isUser ? "flex justify-end" : "flex items-start gap-3"}>
@@ -193,7 +211,7 @@ function Bubble({ message }: { message: ChatMessage }) {
             : "max-w-[32rem] rounded-2xl rounded-bl-sm border border-white/8 bg-container-high/50 p-4 text-[15px] leading-relaxed"
         }
       >
-        {message.text}
+        {text}
       </p>
     </div>
   );

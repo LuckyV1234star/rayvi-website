@@ -2,25 +2,27 @@
 
 import { useState } from "react";
 import { GlassPanel } from "@/components/GlassPanel";
-import { useGalleryAccent } from "@/components/GalleryShell";
+import { useGalleryAccent, useLocale } from "@/components/GalleryShell";
 import { RayviShell } from "@/components/RayviShell";
 import { personaTones, themePresets } from "@/lib/demo-data";
 
 export function PersonaDemo() {
   const { preset, setPresetId } = useGalleryAccent();
+  const { locale, t } = useLocale();
   const [toneId, setToneId] = useState<(typeof personaTones)[number]["id"]>("brief");
-  const tone = personaTones.find((item) => item.id === toneId) ?? personaTones[0];
+  const tone = t.persona.tones[toneId];
+  const track = locale === "zh-Hant" ? "tracking-normal" : "uppercase tracking-[0.12em]";
 
   return (
-    <RayviShell active="settings" title="Settings">
+    <RayviShell active="settings" title={t.persona.title}>
       <div className="h-full overflow-y-auto px-5 py-4 rayvi:px-10 rayvi:py-8">
         <GlassPanel className="p-6 rayvi:p-7">
-          <p className="font-mono text-[11px] tracking-[0.18em] uppercase">Appearance</p>
-          <p className="mt-2 max-w-md text-xs leading-relaxed text-muted">
-            Pick a shipped preset. The shell chrome follows it.
+          <p className={`font-mono text-[11px] ${locale === "zh-Hant" ? "tracking-normal" : "tracking-[0.18em] uppercase"}`}>
+            {t.persona.appearance}
           </p>
-          <p className="mt-4 font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
-            Shipped
+          <p className="mt-2 max-w-md text-xs leading-relaxed text-muted">{t.persona.lede}</p>
+          <p className={`mt-4 font-mono text-[10px] text-muted ${track}`}>
+            {t.persona.shipped}
           </p>
           <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
             {themePresets.map((item) => {
@@ -46,19 +48,19 @@ export function PersonaDemo() {
                       />
                     ))}
                   </span>
-                  <span className="mt-2 block text-sm">{item.name}</span>
-                  <span className="font-mono text-[10px] tracking-wide text-muted uppercase">
-                    Shipped
+                  <span className="mt-2 block text-sm">{t.persona.presets[item.id]}</span>
+                  <span className={`font-mono text-[10px] text-muted ${track}`}>
+                    {t.persona.shipped}
                   </span>
                 </button>
               );
             })}
           </div>
           <div className="mt-5 border-t border-white/8 pt-4">
-            <p className="font-mono text-[10px] tracking-[0.12em] text-muted uppercase">Tone</p>
+            <p className={`font-mono text-[10px] text-muted ${track}`}>{t.persona.tone}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {personaTones.map((item) => {
-                const selected = item.id === tone.id;
+                const selected = item.id === toneId;
                 return (
                   <button
                     key={item.id}
@@ -72,7 +74,7 @@ export function PersonaDemo() {
                       color: selected ? preset.onPrimary : "#E5E1E4",
                     }}
                   >
-                    {item.label}
+                    {t.persona.tones[item.id].label}
                   </button>
                 );
               })}

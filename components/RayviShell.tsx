@@ -1,26 +1,17 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { psycheStatusLine } from "@/lib/demo-data";
+import { useLocale } from "@/components/GalleryShell";
 
-const nav = [
-  { id: "assistant", label: "Rayvi" },
-  { id: "calendar", label: "Calendar" },
-  { id: "tasks", label: "Tasks" },
-  { id: "expenses", label: "Expenses" },
-  { id: "health", label: "Health" },
-  { id: "memory", label: "Memory" },
-] as const;
+const navIds = ["assistant", "calendar", "tasks", "expenses", "health", "memory"] as const;
 
-export type RayviSection = (typeof nav)[number]["id"] | "settings";
+export type RayviSection = (typeof navIds)[number] | "settings";
 
 type RayviShellProps = {
   active: RayviSection;
   title: string | null;
   children: ReactNode;
 };
-
-const statusText = psycheStatusLine.trim() || "Steady";
 
 export function RayviPortrait({
   size,
@@ -48,18 +39,31 @@ export function RayviStatusLine({
   centered?: boolean;
   className?: string;
 }) {
+  const { locale, t } = useLocale();
+  const text = t.shell.status.trim() || t.shell.steady;
+  const track = locale === "zh-Hant" ? "tracking-normal" : "tracking-[2px]";
   return (
     <p
-      className={`flex gap-1.5 font-mono text-[11px] leading-snug tracking-[2px] text-muted ${centered ? "items-start justify-center text-left" : "items-start"} ${className}`}
+      className={`flex gap-1.5 font-mono text-[11px] leading-snug text-muted ${track} ${centered ? "items-start justify-center text-left" : "items-start"} ${className}`}
     >
       <Pulse />
-      <span className="line-clamp-3">{statusText}</span>
+      <span className="line-clamp-3">{text}</span>
     </p>
   );
 }
 
 export function RayviShell({ active, title, children }: RayviShellProps) {
+  const { locale, t } = useLocale();
   const [drawer, setDrawer] = useState(false);
+  const nav = [
+    { id: "assistant" as const, label: "Rayvi" },
+    { id: "calendar" as const, label: t.shell.calendar },
+    { id: "tasks" as const, label: t.shell.tasks },
+    { id: "expenses" as const, label: t.shell.expenses },
+    { id: "health" as const, label: t.shell.health },
+    { id: "memory" as const, label: t.shell.memory },
+  ];
+  const wideTrack = locale === "zh-Hant" ? "" : "uppercase tracking-[2px]";
 
   return (
     <div className="mx-auto w-full max-w-[23.5rem] rayvi:max-w-none">
@@ -82,7 +86,7 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
               ))}
               <div className="mt-auto mb-3">
                 <div className="mx-4 mb-3 h-px bg-white/10" />
-                <NavRow id="settings" label="Settings" active={active === "settings"} />
+                <NavRow id="settings" label={t.shell.settings} active={active === "settings"} />
               </div>
             </nav>
           </aside>
@@ -90,22 +94,22 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
           <div className="relative flex min-h-0 min-w-0 flex-1 flex-col">
             {title ? (
               <div className="flex items-center gap-1 border-b border-white/10 bg-bg/60 px-2 py-1 backdrop-blur-md rayvi:hidden">
-                <IconButton label="Open menu" onClick={() => setDrawer(true)}>
+                <IconButton label={t.shell.menu} onClick={() => setDrawer(true)}>
                   <MenuIcon />
                 </IconButton>
                 <p className="flex-1 text-center text-lg font-medium tracking-tight text-(--demo-secondary)">
                   {title}
                 </p>
-                <IconButton label="Settings">
+                <IconButton label={t.shell.settings}>
                   <SettingsIcon />
                 </IconButton>
               </div>
             ) : (
               <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-between p-3 rayvi:hidden">
-                <IconButton label="Open menu" onClick={() => setDrawer(true)}>
+                <IconButton label={t.shell.menu} onClick={() => setDrawer(true)}>
                   <MenuIcon />
                 </IconButton>
-                <IconButton label="Settings">
+                <IconButton label={t.shell.settings}>
                   <SettingsIcon />
                 </IconButton>
               </div>
@@ -120,7 +124,7 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
             <div className="absolute inset-0 z-20 rayvi:hidden">
               <button
                 type="button"
-                aria-label="Close menu"
+                aria-label={t.shell.close}
                 className="absolute inset-0 bg-black/45"
                 onClick={() => setDrawer(false)}
               />
@@ -138,8 +142,8 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
                         onClick={() => setDrawer(false)}
                         className={
                           item.id === active
-                            ? "flex w-full items-center gap-4 rounded-2xl bg-(--demo-secondary)/10 px-5 py-4 text-left font-mono text-xs tracking-[2px] text-(--demo-secondary) uppercase"
-                            : "flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left font-mono text-xs tracking-[2px] text-muted uppercase"
+                            ? `flex w-full items-center gap-4 rounded-2xl bg-(--demo-secondary)/10 px-5 py-4 text-left font-mono text-xs text-(--demo-secondary) ${wideTrack}`
+                            : `flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left font-mono text-xs text-muted ${wideTrack}`
                         }
                       >
                         <NavIcon id={item.id} />

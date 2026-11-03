@@ -32,7 +32,7 @@
   --color-container: var(--container);
   --color-container-mid: var(--container-mid);
   --color-container-high: var(--container-high);
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), "PingFang TC", "Microsoft JhengHei", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 

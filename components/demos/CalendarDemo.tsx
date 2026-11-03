@@ -1,30 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/components/GalleryShell";
 import { GlassPanel } from "@/components/GlassPanel";
 import { RayviShell } from "@/components/RayviShell";
 import { calendarEvents, sampleWeek, type CalendarEvent } from "@/lib/demo-data";
+import type { Copy } from "@/lib/copy";
 
 const startHour = 6;
 const endHour = 22;
 const rowHeight = 56;
 const hours = Array.from({ length: endHour - startHour }, (_, index) => startHour + index);
-const letters = ["M", "T", "W", "T", "F", "S", "S"];
-
 export function CalendarDemo() {
+  const { t } = useLocale();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [day, setDay] = useState<(typeof sampleWeek)[number]["key"]>("wed");
   const selected = calendarEvents.find((event) => event.id === selectedId) ?? null;
   const dayMeta = sampleWeek.find((item) => item.key === (selected?.day ?? day));
 
   return (
-    <RayviShell active="calendar" title="Calendar">
+    <RayviShell active="calendar" title={t.shell.calendar}>
       <div className="relative flex h-full min-h-0 flex-col">
         <div className="flex h-full min-h-0 flex-col px-5 pt-2 rayvi:hidden">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-xl">Nov 2026</p>
-              <p className="mt-1 font-mono text-[11px] tracking-[0.14em] text-muted">WEEK 45</p>
+              <p className="text-xl">{t.calendar.month}</p>
+              <p className="mt-1 font-mono text-[11px] tracking-[0.14em] text-muted">{t.calendar.week}</p>
             </div>
           </div>
           <div className="mt-3 grid grid-cols-7 pb-3">
@@ -38,7 +39,7 @@ export function CalendarDemo() {
                   onClick={() => setDay(item.key)}
                   className="flex flex-col items-center gap-1"
                 >
-                  <span className="font-mono text-[10px] text-muted">{letters[index]}</span>
+                  <span className="font-mono text-[10px] text-muted">{t.calendar.letters[index]}</span>
                   <span
                     className={
                       on
@@ -56,14 +57,15 @@ export function CalendarDemo() {
             <Timeline
               events={calendarEvents.filter((event) => event.day === day)}
               onOpen={setSelectedId}
+              copy={t}
             />
           </div>
         </div>
 
         <div className="hidden h-full min-h-0 flex-col rayvi:flex">
           <div className="flex h-20 items-center gap-3 px-10">
-            <h3 className="text-3xl font-light tracking-tight">2–8 Nov 2026</h3>
-            <p className="ml-auto font-mono text-[11px] tracking-[0.14em] text-muted">WEEK 45</p>
+            <h3 className="text-3xl font-light tracking-tight">{t.calendar.range}</h3>
+            <p className="ml-auto font-mono text-[11px] tracking-[0.14em] text-muted">{t.calendar.week}</p>
           </div>
           <div className="flex min-h-0 flex-1 gap-6 px-10 pb-8">
             <GlassPanel className="flex h-full min-h-0 min-w-0 flex-1 flex-col">
@@ -72,7 +74,7 @@ export function CalendarDemo() {
                 {sampleWeek.map((item) => (
                   <span key={item.key} className="flex flex-1 flex-col items-center py-2">
                     <span className="font-mono text-[10px] tracking-wide text-muted uppercase">
-                      {item.label}
+                      {t.calendar.days[item.key]}
                     </span>
                     <span
                       className={
@@ -111,7 +113,7 @@ export function CalendarDemo() {
                       {calendarEvents
                         .filter((event) => event.day === item.key)
                         .map((event) => (
-                          <EventBlock key={event.id} event={event} onOpen={setSelectedId} />
+                          <EventBlock key={event.id} event={event} onOpen={setSelectedId} copy={t} />
                         ))}
                     </div>
                   ))}
@@ -122,8 +124,9 @@ export function CalendarDemo() {
               <div className="w-[340px] shrink-0">
                 <Detail
                   event={selected}
-                  dayLabel={`${dayMeta?.label ?? ""} ${dayMeta?.date ?? ""} Nov`}
+                    dayLabel={`${t.calendar.days[selected.day]} ${dayMeta?.date ?? ""}`}
                   onClose={() => setSelectedId(null)}
+                  copy={t}
                 />
               </div>
             ) : null}
@@ -134,8 +137,9 @@ export function CalendarDemo() {
           <div className="absolute inset-0 z-10 flex items-end bg-black/50 p-3 rayvi:hidden">
             <Detail
               event={selected}
-              dayLabel={`${dayMeta?.label ?? ""} ${dayMeta?.date ?? ""} Nov`}
+                    dayLabel={`${t.calendar.days[selected.day]} ${dayMeta?.date ?? ""}`}
               onClose={() => setSelectedId(null)}
+              copy={t}
             />
           </div>
         ) : null}
@@ -144,12 +148,18 @@ export function CalendarDemo() {
   );
 }
 
+function eventText(copy: Copy, id: string) {
+  return copy.calendar.events[id as keyof Copy["calendar"]["events"]];
+}
+
 function Timeline({
   events,
   onOpen,
+  copy,
 }: {
   events: CalendarEvent[];
   onOpen: (id: string) => void;
+  copy: Copy;
 }) {
   return (
     <div className="relative flex" style={{ height: hours.length * rowHeight }}>
@@ -165,7 +175,7 @@ function Timeline({
           <div key={hour} className="border-b border-white/5" style={{ height: rowHeight }} />
         ))}
         {events.map((event) => (
-          <EventBlock key={event.id} event={event} onOpen={onOpen} />
+          <EventBlock key={event.id} event={event} onOpen={onOpen} copy={copy} />
         ))}
       </div>
     </div>
@@ -175,10 +185,13 @@ function Timeline({
 function EventBlock({
   event,
   onOpen,
+  copy,
 }: {
   event: CalendarEvent;
   onOpen: (id: string) => void;
+  copy: Copy;
 }) {
+  const title = eventText(copy, event.id).title;
   const top = ((event.startMin - startHour * 60) / 60) * rowHeight;
   const height = Math.max(((event.endMin - event.startMin) / 60) * rowHeight, 18);
   const chrome = height >= 72 ? "full" : height >= 48 ? "compact" : "strip";
@@ -190,9 +203,9 @@ function EventBlock({
       style={{ top, height }}
     >
       {chrome === "strip" ? (
-        <span className="font-mono text-[10px]">{event.title.slice(0, 2)}</span>
+        <span className="font-mono text-[10px]">{title.slice(0, 2)}</span>
       ) : (
-        <span className="block truncate text-[11px] font-medium">{event.title}</span>
+        <span className="block truncate text-[11px] font-medium">{title}</span>
       )}
       {chrome === "full" ? (
         <span className="block truncate font-mono text-[10px] text-muted">{event.time}</span>
@@ -205,23 +218,26 @@ function Detail({
   event,
   dayLabel,
   onClose,
+  copy,
 }: {
   event: CalendarEvent;
   dayLabel: string;
   onClose: () => void;
+  copy: Copy;
 }) {
+  const text = eventText(copy, event.id);
   return (
     <GlassPanel className="w-full p-4">
       <p className="font-mono text-[10px] tracking-[0.16em] text-muted uppercase">{dayLabel}</p>
-      <h3 className="mt-1 text-lg font-medium">{event.title}</h3>
+      <h3 className="mt-1 text-lg font-medium">{text.title}</h3>
       <dl className="mt-4 space-y-2 text-sm">
         <div className="flex justify-between gap-4 border-t border-white/10 pt-2">
-          <dt className="text-muted">Time</dt>
+          <dt className="text-muted">{copy.calendar.time}</dt>
           <dd>{event.time}</dd>
         </div>
         <div className="flex justify-between gap-4 border-t border-white/10 pt-2">
-          <dt className="text-muted">Place</dt>
-          <dd>{event.place}</dd>
+          <dt className="text-muted">{copy.calendar.place}</dt>
+          <dd>{text.place}</dd>
         </div>
       </dl>
       <button
@@ -229,7 +245,7 @@ function Detail({
         onClick={onClose}
         className="mt-5 min-h-11 w-full bg-(--demo-accent) text-sm font-semibold text-(--demo-on)"
       >
-        Close
+        {copy.calendar.close}
       </button>
     </GlassPanel>
   );

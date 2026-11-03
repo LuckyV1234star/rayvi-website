@@ -14,9 +14,9 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rayvi.net"),
-  title: "Rayvi — your personal AI companion",
+  title: "Rayvi — your custom personal secretary",
   description:
-    "Calendar and expenses, in a persona you set. Rayvi is a friends-only TestFlight.",
+    "A secretary you design — calendar and expenses. Friends-only TestFlight.",
 };
 
 export const viewport: Viewport = {

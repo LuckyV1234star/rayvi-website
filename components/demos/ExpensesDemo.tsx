@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/components/GalleryShell";
 import { GlassPanel } from "@/components/GlassPanel";
 import { RayviShell } from "@/components/RayviShell";
 import { expenseMonths, formatMoney, type ExpenseMonth } from "@/lib/demo-data";
@@ -8,6 +9,7 @@ import { expenseMonths, formatMoney, type ExpenseMonth } from "@/lib/demo-data";
 type ChartMode = "line" | "pie" | "bar";
 
 export function ExpensesDemo() {
+  const { locale, t } = useLocale();
   const [monthId, setMonthId] = useState("2026-11");
   const [mode, setMode] = useState<ChartMode>("pie");
   const [category, setCategory] = useState<string | null>(null);
@@ -16,6 +18,18 @@ export function ExpensesDemo() {
   const reserves = month.intake - output;
   const items = category ? month.items.filter((item) => item.category === category) : month.items;
   const top = [...month.categories].sort((a, b) => b.amount - a.amount)[0];
+  const monthCopy = t.expenses.months[month.id as keyof typeof t.expenses.months];
+  const categoryName = (name: string) =>
+    t.expenses.categories[name as keyof typeof t.expenses.categories] ?? name;
+  const itemName = (id: string) =>
+    t.expenses.items[id as keyof typeof t.expenses.items] ?? id;
+  const whenLabel = (when: string) => {
+    if (locale === "en") return when;
+    const match = when.match(/^([A-Za-z]+)\s+(\d+)$/);
+    const months: Record<string, string> = { Sep: "9月", Oct: "10月", Nov: "11月" };
+    if (!match) return when;
+    return `${months[match[1]] ?? match[1]}${match[2]}日`;
+  };
 
   function pickMonth(id: string) {
     setMonthId(id);
@@ -23,27 +37,27 @@ export function ExpensesDemo() {
   }
 
   return (
-    <RayviShell active="expenses" title="Expenses">
+    <RayviShell active="expenses" title={t.shell.expenses}>
       <div className="flex h-full min-h-0 flex-col">
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pt-2 pb-6 rayvi:hidden">
           <div className="sticky top-0 z-10 -mx-5 bg-bg/80 px-5 py-2 backdrop-blur-md">
             <PeriodChips monthId={month.id} onPick={pickMonth} />
           </div>
-          <p className="font-mono text-[11px] tracking-[0.16em] text-(--demo-secondary)">Observation</p>
-          <h3 className="mt-1 text-2xl">Financial Overview</h3>
+          <p className="font-mono text-[11px] tracking-[0.16em] text-(--demo-secondary)">{t.expenses.observation}</p>
+          <h3 className="mt-1 text-2xl">{t.expenses.overview}</h3>
           <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-            <Stat label="Spent" value={formatMoney(output)} />
-            <Stat label="Count" value={String(month.items.length)} />
-            <Stat label="Top" value={`${top.name} ${Math.round((top.amount / output) * 100)}%`} />
+            <Stat label={t.expenses.spent} value={formatMoney(output)} />
+            <Stat label={t.expenses.count} value={String(month.items.length)} />
+            <Stat label={t.expenses.top} value={`${categoryName(top.name)} ${Math.round((top.amount / output) * 100)}%`} />
           </div>
           <GlassPanel className="mt-3 p-3">
             <div className="flex items-center gap-2">
               <p className="font-mono text-[11px] tracking-[0.14em]">
-                {mode === "line" ? "Daily usage" : mode === "pie" ? "By type" : "Resource allocation"}
+                {mode === "line" ? t.expenses.daily : mode === "pie" ? t.expenses.byType : t.expenses.allocation}
               </p>
-              <p className="ml-auto font-mono text-[10px] text-muted">{month.label}</p>
+              <p className="ml-auto font-mono text-[10px] text-muted">{monthCopy.label}</p>
             </div>
-            <div className="mt-2 grid grid-cols-3 gap-1 rounded-full bg-container-high/40 p-1" role="group" aria-label="Chart">
+            <div className="mt-2 grid grid-cols-3 gap-1 rounded-full bg-container-high/40 p-1" role="group" aria-label={t.expenses.chart}>
               {(["line", "pie", "bar"] as const).map((item) => (
                 <button
                   key={item}
@@ -56,7 +70,7 @@ export function ExpensesDemo() {
                       : "h-7 rounded-full font-mono text-[10px] tracking-wide text-muted"
                   }
                 >
-                  {item === "line" ? "Line" : item === "pie" ? "Pie" : "Bar"}
+                  {item === "line" ? t.expenses.line : item === "pie" ? t.expenses.pie : t.expenses.bar}
                 </button>
               ))}
             </div>
@@ -73,19 +87,19 @@ export function ExpensesDemo() {
                 onClick={() => setCategory(category === item.name ? null : item.name)}
                 className="min-h-9 rounded-full border border-white/15 px-3 text-xs"
               >
-                {item.name}
+                {categoryName(item.name)}
               </button>
             ))}
           </div>
-          <p className="mt-4 font-mono text-[11px] tracking-[0.14em]">Recent activity</p>
+          <p className="mt-4 font-mono text-[11px] tracking-[0.14em]">{t.expenses.recent}</p>
           <ul className="mt-2 space-y-2">
             {items.map((item) => (
               <li key={item.id}>
                 <GlassPanel className="flex items-center justify-between px-3 py-3 text-sm">
                   <span>
-                    <span className="block">{item.title}</span>
+                    <span className="block">{itemName(item.id)}</span>
                     <span className="text-xs text-muted">
-                      {item.when} · {item.category}
+                      {whenLabel(item.when)} · {categoryName(item.category)}
                     </span>
                   </span>
                   <span className="font-mono">{formatMoney(item.amount)}</span>
@@ -97,7 +111,7 @@ export function ExpensesDemo() {
 
         <div className="hidden min-h-0 flex-1 flex-col rayvi:flex">
           <div className="flex h-20 items-center gap-6 px-10">
-            <h3 className="text-3xl font-light tracking-tight">Financial Overview</h3>
+            <h3 className="text-3xl font-light tracking-tight">{t.expenses.overview}</h3>
             <div className="ml-auto max-w-[340px]">
               <PeriodChips monthId={month.id} onPick={pickMonth} />
             </div>
@@ -105,25 +119,25 @@ export function ExpensesDemo() {
           <div className="flex min-h-0 flex-1 gap-6 px-10 pb-8">
             <div className="flex min-h-0 min-w-0 flex-[8] flex-col">
               <div className="grid shrink-0 grid-cols-3 gap-3">
-                <Stat label="Total Output" value={formatMoney(output)} caption={month.label} />
-                <Stat label="Total Intake" value={formatMoney(month.intake)} caption={month.label} />
-                <Stat label="Reserves" value={formatMoney(reserves)} caption={month.label} />
+                <Stat label={t.expenses.output} value={formatMoney(output)} caption={monthCopy.label} />
+                <Stat label={t.expenses.intake} value={formatMoney(month.intake)} caption={monthCopy.label} />
+                <Stat label={t.expenses.reserves} value={formatMoney(reserves)} caption={monthCopy.label} />
               </div>
               <GlassPanel className="mt-5 flex min-h-0 flex-[5] flex-col p-4">
-                <ChartTitle title="Daily usage" caption={month.label} />
+                <ChartTitle title={t.expenses.daily} caption={monthCopy.label} />
                 <div className="mt-2 min-h-0 flex-1">
                   <Chart month={month} mode="line" category={category} onPick={setCategory} />
                 </div>
               </GlassPanel>
               <div className="mt-4 grid min-h-0 flex-[6] grid-cols-2 gap-4">
                 <GlassPanel className="flex min-h-0 flex-col p-4">
-                  <ChartTitle title="By type" caption={month.label} />
+                  <ChartTitle title={t.expenses.byType} caption={monthCopy.label} />
                   <div className="mt-2 min-h-0 flex-1">
                     <Chart month={month} mode="pie" category={category} onPick={setCategory} />
                   </div>
                 </GlassPanel>
                 <GlassPanel className="flex min-h-0 flex-col p-4">
-                  <ChartTitle title="Resource allocation" caption={month.label} />
+                  <ChartTitle title={t.expenses.allocation} caption={monthCopy.label} />
                   <div className="mt-2 min-h-0 flex-1">
                     <Chart month={month} mode="bar" category={category} onPick={setCategory} />
                   </div>
@@ -131,16 +145,16 @@ export function ExpensesDemo() {
               </div>
             </div>
             <GlassPanel className="flex min-h-0 flex-[4] flex-col p-4">
-              <p className="font-mono text-[11px] tracking-[0.14em]">Recent activity</p>
+              <p className="font-mono text-[11px] tracking-[0.14em]">{t.expenses.recent}</p>
               <ul className="mt-3 min-h-0 flex-1 space-y-3 overflow-y-auto">
                 {items.map((item) => (
                   <li key={item.id} className="border-b border-white/8 pb-2 text-sm">
                     <span className="flex justify-between gap-2">
-                      <span>{item.title}</span>
+                      <span>{itemName(item.id)}</span>
                       <span className="font-mono">{formatMoney(item.amount)}</span>
                     </span>
                     <span className="text-xs text-muted">
-                      {item.when} · {item.category}
+                      {whenLabel(item.when)} · {categoryName(item.category)}
                     </span>
                   </li>
                 ))}
@@ -160,6 +174,7 @@ function PeriodChips({
   monthId: string;
   onPick: (id: string) => void;
 }) {
+  const { t } = useLocale();
   return (
     <div className="flex gap-2 overflow-x-auto">
       {expenseMonths.map((item) => {
@@ -176,7 +191,7 @@ function PeriodChips({
                 : "min-h-9 shrink-0 rounded-full border border-white/15 px-3 text-xs text-muted"
             }
           >
-            {item.id === "2026-11" ? "This Month" : item.chip}
+            {t.expenses.months[item.id as keyof typeof t.expenses.months].chip}
           </button>
         );
       })}
@@ -222,6 +237,7 @@ function Chart({
 }
 
 function LineChart({ values }: { values: number[] }) {
+  const { t } = useLocale();
   const max = Math.max(...values, 1);
   const points = values
     .map((value, index) => {
@@ -231,7 +247,7 @@ function LineChart({ values }: { values: number[] }) {
     })
     .join(" ");
   return (
-    <svg viewBox="0 0 316 120" className="h-full w-full" role="img" aria-label="Daily spending">
+    <svg viewBox="0 0 316 120" className="h-full w-full" role="img" aria-label={t.expenses.dailySpending}>
       <polyline fill="none" stroke="var(--demo-accent)" strokeWidth="2" points={points} />
     </svg>
   );
@@ -246,9 +262,10 @@ function BarChart({
   category: string | null;
   onPick: (name: string | null) => void;
 }) {
+  const { t } = useLocale();
   const max = Math.max(...month.categories.map((item) => item.amount));
   return (
-    <svg viewBox="0 0 320 120" className="h-full w-full" role="img" aria-label="Spending by category">
+    <svg viewBox="0 0 320 120" className="h-full w-full" role="img" aria-label={t.expenses.byCategory}>
       {month.categories.map((item, index) => {
         const height = (item.amount / max) * 78;
         const x = 24 + index * 74;
@@ -263,7 +280,7 @@ function BarChart({
               fill={on ? "var(--demo-secondary)" : "var(--demo-accent)"}
             />
             <text x={x + 18} y="112" textAnchor="middle" fill="#C5C6D0" fontSize="11">
-              {item.name}
+              {t.expenses.categories[item.name as keyof typeof t.expenses.categories]}
             </text>
           </g>
         );
@@ -281,11 +298,12 @@ function PieChart({
   category: string | null;
   onPick: (name: string | null) => void;
 }) {
+  const { t } = useLocale();
   const total = month.categories.reduce((sum, item) => sum + item.amount, 0);
   let cursor = 0;
   const colors = ["var(--demo-accent)", "var(--demo-secondary)", "#7F8EC7", "#C5C6D0"];
   return (
-    <svg viewBox="0 0 120 120" className="mx-auto h-full" role="img" aria-label="Spending by type">
+    <svg viewBox="0 0 120 120" className="mx-auto h-full" role="img" aria-label={t.expenses.byTypeChart}>
       {month.categories.map((item, index) => {
         const start = cursor / total;
         cursor += item.amount;
