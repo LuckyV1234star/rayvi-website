@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { psycheStatusLine } from "@/lib/demo-data";
 
 const nav = [
   { id: "assistant", label: "Rayvi" },
@@ -19,34 +20,69 @@ type RayviShellProps = {
   children: ReactNode;
 };
 
+const statusText = psycheStatusLine.trim() || "Steady";
+
+export function RayviPortrait({
+  size,
+  className = "",
+}: {
+  size: number;
+  className?: string;
+}) {
+  return (
+    <img
+      src="/rayvi/portrait.png"
+      alt=""
+      width={size}
+      height={size}
+      className={`inline-block shrink-0 rounded-full object-cover object-top ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
+export function RayviStatusLine({
+  centered = false,
+  className = "",
+}: {
+  centered?: boolean;
+  className?: string;
+}) {
+  return (
+    <p
+      className={`flex gap-1.5 font-mono text-[11px] leading-snug tracking-[2px] text-muted ${centered ? "items-start justify-center text-left" : "items-start"} ${className}`}
+    >
+      <Pulse />
+      <span className="line-clamp-3">{statusText}</span>
+    </p>
+  );
+}
+
 export function RayviShell({ active, title, children }: RayviShellProps) {
   const [drawer, setDrawer] = useState(false);
 
   return (
     <div className="mx-auto w-full max-w-[23.5rem] rayvi:max-w-none">
       <div className="rounded-[2.4rem] border border-white/15 bg-[#08080a] p-2 rayvi:rounded-xl rayvi:border-white/10 rayvi:bg-transparent rayvi:p-0">
-        <div className="relative flex h-[40rem] overflow-hidden rounded-[1.85rem] bg-bg rayvi:h-[42rem] rayvi:rounded-[11px]">
+        <div className="relative flex h-[40rem] min-h-[40rem] overflow-hidden rounded-[1.85rem] bg-bg rayvi:h-[64rem] rayvi:min-h-[64rem] rayvi:rounded-[11px]">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--demo-accent)_12%,transparent),transparent_55%)]"
           />
-          <aside className="relative hidden w-64 shrink-0 flex-col border-r border-white/8 bg-container-high/80 rayvi:flex">
+          <aside className="relative hidden w-64 shrink-0 flex-col border-r border-white/[0.05] bg-container-high/80 rayvi:flex">
             <div className="px-6 pt-8 pb-6 text-center">
-              <Avatar size={64} />
+              <RayviPortrait size={64} />
               <p className="mt-3 text-xl font-semibold tracking-tight">Rayvi</p>
-              <p className="mt-2 flex items-center justify-center gap-1.5 font-mono text-[11px] tracking-[0.18em] text-muted uppercase">
-                <Pulse />
-                Steady
-              </p>
+              <RayviStatusLine centered className="mt-2" />
             </div>
             <div className="mx-4 h-px bg-white/10" />
-            <nav className="mt-3 flex flex-1 flex-col px-4" aria-label="Rayvi">
+            <nav className="mt-3 flex flex-1 flex-col" aria-label="Rayvi">
               {nav.map((item) => (
-                <NavRow key={item.id} label={item.label} active={item.id === active} />
+                <NavRow key={item.id} id={item.id} label={item.label} active={item.id === active} />
               ))}
               <div className="mt-auto mb-3">
-                <div className="mb-3 h-px bg-white/10" />
-                <NavRow label="Settings" active={active === "settings"} />
+                <div className="mx-4 mb-3 h-px bg-white/10" />
+                <NavRow id="settings" label="Settings" active={active === "settings"} />
               </div>
             </nav>
           </aside>
@@ -89,15 +125,12 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
                 onClick={() => setDrawer(false)}
               />
               <div className="absolute inset-y-0 left-0 flex w-72 flex-col overflow-hidden rounded-r-3xl border-r border-white/10 bg-container-high/90 backdrop-blur-xl">
-                <div className="flex flex-1 flex-col justify-end bg-[linear-gradient(to_bottom,transparent,#131315)] px-5 pb-4">
-                  <Avatar size={72} />
-                  <p className="mt-3 text-lg font-semibold">Rayvi</p>
-                  <p className="mt-1 flex items-center gap-1.5 font-mono text-[11px] tracking-[0.16em] text-muted uppercase">
-                    <Pulse />
-                    Steady
-                  </p>
+                <div className="flex flex-1 flex-col justify-end bg-[linear-gradient(to_bottom,transparent,#131315)] px-5 pb-5">
+                  <RayviPortrait size={64} />
+                  <p className="mt-3 text-lg font-medium">Rayvi</p>
+                  <RayviStatusLine className="mt-1" />
                 </div>
-                <ul className="flex flex-1 flex-col gap-2 px-4 py-4">
+                <ul className="flex flex-1 flex-col gap-1 px-3 py-3">
                   {nav.map((item) => (
                     <li key={item.id}>
                       <button
@@ -105,10 +138,11 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
                         onClick={() => setDrawer(false)}
                         className={
                           item.id === active
-                            ? "w-full rounded-xl bg-(--demo-accent)/10 px-4 py-3 text-left font-mono text-xs tracking-wide text-(--demo-secondary)"
-                            : "w-full rounded-xl px-4 py-3 text-left font-mono text-xs tracking-wide text-muted"
+                            ? "flex w-full items-center gap-4 rounded-2xl bg-(--demo-secondary)/10 px-5 py-4 text-left font-mono text-xs tracking-[2px] text-(--demo-secondary) uppercase"
+                            : "flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-left font-mono text-xs tracking-[2px] text-muted uppercase"
                         }
                       >
+                        <NavIcon id={item.id} />
                         {item.label}
                       </button>
                     </li>
@@ -123,35 +157,100 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
   );
 }
 
-function NavRow({ label, active }: { label: string; active: boolean }) {
+function NavRow({
+  id,
+  label,
+  active,
+}: {
+  id: RayviSection;
+  label: string;
+  active: boolean;
+}) {
   return (
-    <span
-      aria-current={active ? "page" : undefined}
-      className={
-        active
-          ? "mb-0.5 flex items-center rounded-xl bg-primary-container/10 px-5 py-3.5 font-mono text-xs font-bold tracking-wide text-(--demo-secondary) shadow-[inset_-2px_0_0_var(--demo-secondary)]"
-          : "mb-0.5 flex items-center rounded-xl px-5 py-3.5 font-mono text-xs tracking-wide text-muted"
-      }
-    >
-      {label}
+    <span className="px-4 py-0.5">
+      <span
+        aria-current={active ? "page" : undefined}
+        className={
+          active
+            ? "flex items-center gap-4 rounded-xl bg-primary-container/10 px-5 py-3.5 font-mono text-xs font-bold tracking-[1px] text-(--demo-secondary) shadow-[inset_-2px_0_0_var(--demo-secondary)]"
+            : "flex items-center gap-4 rounded-xl px-5 py-3.5 font-mono text-xs tracking-[1px] text-muted"
+        }
+      >
+        <NavIcon id={id} />
+        {label}
+      </span>
     </span>
   );
 }
 
-function Avatar({ size }: { size: number }) {
+function NavIcon({ id }: { id: RayviSection }) {
+  const common = {
+    width: 22,
+    height: 22,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    "aria-hidden": true as const,
+  };
+  if (id === "assistant") {
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="8" r="3" />
+        <path d="M5 19c1.4-3 3.8-4.5 7-4.5S17.6 16 19 19" />
+      </svg>
+    );
+  }
+  if (id === "calendar") {
+    return (
+      <svg {...common}>
+        <rect x="4" y="5" width="16" height="15" rx="2" />
+        <path d="M8 3.5V7M16 3.5V7M4 10h16" />
+      </svg>
+    );
+  }
+  if (id === "tasks") {
+    return (
+      <svg {...common}>
+        <path d="M8 7h11M8 12h11M8 17h11" />
+        <path d="M4.5 7.2l1 1 1.6-2M4.5 12.2l1 1 1.6-2M4.5 17.2l1 1 1.6-2" />
+      </svg>
+    );
+  }
+  if (id === "expenses") {
+    return (
+      <svg {...common}>
+        <rect x="3" y="6" width="18" height="12" rx="2" />
+        <path d="M3 10h18" />
+      </svg>
+    );
+  }
+  if (id === "health") {
+    return (
+      <svg {...common}>
+        <path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z" />
+      </svg>
+    );
+  }
+  if (id === "memory") {
+    return (
+      <svg {...common}>
+        <path d="M6 5h9a3 3 0 0 1 3 3v12H9a3 3 0 0 1-3-3V5z" />
+        <path d="M9 5v12" />
+      </svg>
+    );
+  }
   return (
-    <span
-      className="inline-flex items-center justify-center rounded-full border border-(--demo-accent)/40 bg-container font-medium text-(--demo-accent)"
-      style={{ width: size, height: size }}
-    >
-      RV
-    </span>
+    <svg {...common}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18" />
+    </svg>
   );
 }
 
 function Pulse() {
   return (
-    <span className="relative inline-flex size-2">
+    <span className="relative mt-1 inline-flex size-2 shrink-0">
       <span className="absolute inline-flex size-full animate-ping rounded-full bg-(--demo-secondary) opacity-60 motion-reduce:animate-none" />
       <span className="relative inline-flex size-2 rounded-full bg-(--demo-secondary)" />
     </span>

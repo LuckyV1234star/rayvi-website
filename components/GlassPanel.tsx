@@ -8,7 +8,7 @@ type GlassPanelProps = {
 export function GlassPanel({ children, className = "" }: GlassPanelProps) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-white/10 bg-container-high/55 shadow-[inset_0_1px_0_rgba(229,225,228,0.08)] backdrop-blur-md ${className}`}
+      className={`overflow-hidden rounded-3xl border border-white/[0.06] bg-[linear-gradient(to_bottom_right,rgba(229,225,228,0.04),transparent),rgba(32,31,33,0.55)] backdrop-blur-xl ${className}`}
     >
       {children}
     </div>

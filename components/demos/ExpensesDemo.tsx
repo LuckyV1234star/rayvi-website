@@ -25,28 +25,10 @@ export function ExpensesDemo() {
   return (
     <RayviShell active="expenses" title="Expenses">
       <div className="flex h-full min-h-0 flex-col">
-        <div className="flex gap-2 overflow-x-auto px-5 py-2">
-          {expenseMonths.map((item) => {
-            const on = item.id === month.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                aria-pressed={on}
-                onClick={() => pickMonth(item.id)}
-                className={
-                  on
-                    ? "min-h-9 shrink-0 rounded-full bg-(--demo-accent) px-3 text-xs font-semibold text-(--demo-on)"
-                    : "min-h-9 shrink-0 rounded-full border border-white/15 px-3 text-xs text-muted"
-                }
-              >
-                {item.id === "2026-11" ? "This Month" : item.chip}
-              </button>
-            );
-          })}
-        </div>
-
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pt-2 pb-6 rayvi:hidden">
+          <div className="sticky top-0 z-10 -mx-5 bg-bg/80 px-5 py-2 backdrop-blur-md">
+            <PeriodChips monthId={month.id} onPick={pickMonth} />
+          </div>
           <p className="font-mono text-[11px] tracking-[0.16em] text-(--demo-secondary)">Observation</p>
           <h3 className="mt-1 text-2xl">Financial Overview</h3>
           <div className="mt-3 grid grid-cols-3 gap-2 text-center">
@@ -113,33 +95,36 @@ export function ExpensesDemo() {
           </ul>
         </div>
 
-        <div className="hidden min-h-0 flex-1 flex-col px-8 pt-2 pb-6 rayvi:flex">
-          <div className="flex items-center gap-4">
-            <h3 className="text-2xl font-medium">Financial Overview</h3>
+        <div className="hidden min-h-0 flex-1 flex-col rayvi:flex">
+          <div className="flex h-20 items-center gap-6 px-10">
+            <h3 className="text-3xl font-light tracking-tight">Financial Overview</h3>
+            <div className="ml-auto max-w-[340px]">
+              <PeriodChips monthId={month.id} onPick={pickMonth} />
+            </div>
           </div>
-          <div className="mt-4 flex min-h-0 flex-1 gap-6">
-            <div className="flex min-h-0 min-w-0 flex-[8] flex-col gap-3">
-              <div className="grid grid-cols-3 gap-3">
+          <div className="flex min-h-0 flex-1 gap-6 px-10 pb-8">
+            <div className="flex min-h-0 min-w-0 flex-[8] flex-col">
+              <div className="grid shrink-0 grid-cols-3 gap-3">
                 <Stat label="Total Output" value={formatMoney(output)} caption={month.label} />
                 <Stat label="Total Intake" value={formatMoney(month.intake)} caption={month.label} />
                 <Stat label="Reserves" value={formatMoney(reserves)} caption={month.label} />
               </div>
-              <GlassPanel className="min-h-[140px] flex-1 p-4">
+              <GlassPanel className="mt-5 flex min-h-0 flex-[5] flex-col p-4">
                 <ChartTitle title="Daily usage" caption={month.label} />
-                <div className="mt-2 h-[calc(100%-1.5rem)] min-h-[100px]">
+                <div className="mt-2 min-h-0 flex-1">
                   <Chart month={month} mode="line" category={category} onPick={setCategory} />
                 </div>
               </GlassPanel>
-              <div className="grid min-h-[140px] flex-1 grid-cols-2 gap-3">
-                <GlassPanel className="p-4">
+              <div className="mt-4 grid min-h-0 flex-[6] grid-cols-2 gap-4">
+                <GlassPanel className="flex min-h-0 flex-col p-4">
                   <ChartTitle title="By type" caption={month.label} />
-                  <div className="mt-2 h-[calc(100%-1.5rem)] min-h-[100px]">
+                  <div className="mt-2 min-h-0 flex-1">
                     <Chart month={month} mode="pie" category={category} onPick={setCategory} />
                   </div>
                 </GlassPanel>
-                <GlassPanel className="p-4">
+                <GlassPanel className="flex min-h-0 flex-col p-4">
                   <ChartTitle title="Resource allocation" caption={month.label} />
-                  <div className="mt-2 h-[calc(100%-1.5rem)] min-h-[100px]">
+                  <div className="mt-2 min-h-0 flex-1">
                     <Chart month={month} mode="bar" category={category} onPick={setCategory} />
                   </div>
                 </GlassPanel>
@@ -165,6 +150,37 @@ export function ExpensesDemo() {
         </div>
       </div>
     </RayviShell>
+  );
+}
+
+function PeriodChips({
+  monthId,
+  onPick,
+}: {
+  monthId: string;
+  onPick: (id: string) => void;
+}) {
+  return (
+    <div className="flex gap-2 overflow-x-auto">
+      {expenseMonths.map((item) => {
+        const on = item.id === monthId;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onPick(item.id)}
+            className={
+              on
+                ? "min-h-9 shrink-0 rounded-full bg-(--demo-accent) px-3 text-xs font-semibold text-(--demo-on)"
+                : "min-h-9 shrink-0 rounded-full border border-white/15 px-3 text-xs text-muted"
+            }
+          >
+            {item.id === "2026-11" ? "This Month" : item.chip}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

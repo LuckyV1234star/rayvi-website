@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { GlassPanel } from "@/components/GlassPanel";
-import { RayviShell } from "@/components/RayviShell";
+import { RayviPortrait, RayviShell, RayviStatusLine } from "@/components/RayviShell";
 import { calendarEvents, cannedReplies, openingChat, sampleWeek } from "@/lib/demo-data";
 
 type ChatMessage = {
@@ -43,11 +43,12 @@ export function ChatDemo() {
   const dayEvents = calendarEvents.filter((event) => event.day === day);
 
   return (
+    <div>
     <RayviShell active="assistant" title={null}>
-      <div className="flex h-full min-h-0 flex-col px-5 pt-16 pb-3 rayvi:px-10 rayvi:pt-8 rayvi:pb-8">
+      <div className="flex h-full min-h-0 flex-col px-5 pt-14 pb-3 rayvi:px-10 rayvi:pt-0 rayvi:pb-8">
         <div className="flex min-h-0 flex-1 gap-6">
           <GlassPanel className="flex min-h-0 min-w-0 flex-1 flex-col">
-            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 py-4 rayvi:px-6" aria-live="polite">
+            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4 rayvi:p-6" aria-live="polite">
               {messages.map((message) => (
                 <Bubble key={message.id} message={message} />
               ))}
@@ -92,36 +93,23 @@ export function ChatDemo() {
                   <SendIcon />
                 </button>
               </div>
-              <div className="mt-2 flex flex-col gap-1 pl-12">
-                {cannedReplies.map((reply) => (
-                  <button
-                    key={reply.user}
-                    type="button"
-                    onClick={() => send(reply.user)}
-                    className="text-left font-mono text-[11px] text-muted hover:text-on-surface"
-                  >
-                    {reply.user}
-                  </button>
-                ))}
-              </div>
-              {nudge ? (
-                <p className="mt-2 pl-12 text-sm text-secondary" role="status">
-                  {nudge}
-                </p>
-              ) : null}
             </form>
           </GlassPanel>
 
           <div className="hidden w-[340px] shrink-0 flex-col gap-3 rayvi:flex">
-            <GlassPanel className="relative min-h-0 flex-[4] bg-[linear-gradient(to_bottom,transparent_40%,#131315)]">
-              <div className="absolute inset-x-5 bottom-4">
-                <p className="flex items-center gap-2 text-lg">
+            <GlassPanel className="relative min-h-0 flex-[4]">
+              <img
+                src="/rayvi/portrait.png"
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_45%,#131315)]" />
+              <div className="absolute inset-x-5 bottom-[18px]">
+                <p className="flex items-center gap-2.5 text-lg tracking-wide">
                   <span className="size-2.5 rounded-full bg-(--demo-secondary)" />
                   Rayvi
                 </p>
-                <p className="mt-1 font-mono text-[11px] tracking-[0.16em] text-muted uppercase">
-                  Steady
-                </p>
+                <RayviStatusLine className="mt-1.5" />
               </div>
             </GlassPanel>
             <GlassPanel className="flex min-h-0 flex-[6] flex-col px-4 py-3">
@@ -172,6 +160,24 @@ export function ChatDemo() {
         </div>
       </div>
     </RayviShell>
+    <div className="mx-auto mt-4 flex max-w-[23.5rem] flex-col gap-1 rayvi:max-w-none">
+      {cannedReplies.map((reply) => (
+        <button
+          key={reply.user}
+          type="button"
+          onClick={() => send(reply.user)}
+          className="text-left font-mono text-[11px] text-muted hover:text-on-surface"
+        >
+          {reply.user}
+        </button>
+      ))}
+      {nudge ? (
+        <p className="text-sm text-secondary" role="status">
+          {nudge}
+        </p>
+      ) : null}
+    </div>
+    </div>
   );
 }
 
@@ -179,16 +185,12 @@ function Bubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
   return (
     <div className={isUser ? "flex justify-end" : "flex items-start gap-3"}>
-      {isUser ? null : (
-        <span className="mt-1 inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-(--demo-accent)/30 bg-container text-[10px] text-(--demo-accent)">
-          RV
-        </span>
-      )}
+      {isUser ? null : <RayviPortrait size={32} className="mt-1" />}
       <p
         className={
           isUser
-            ? "max-w-[32rem] rounded-2xl rounded-br-sm border border-(--demo-accent)/15 bg-primary-container/20 px-4 py-3 text-[15px] leading-relaxed"
-            : "max-w-[32rem] rounded-2xl rounded-bl-sm border border-white/8 bg-container-high/50 px-4 py-3 text-[15px] leading-relaxed"
+            ? "max-w-[32rem] rounded-2xl rounded-br-sm border border-(--demo-accent)/15 bg-primary-container/20 p-4 text-[15px] leading-relaxed"
+            : "max-w-[32rem] rounded-2xl rounded-bl-sm border border-white/8 bg-container-high/50 p-4 text-[15px] leading-relaxed"
         }
       >
         {message.text}

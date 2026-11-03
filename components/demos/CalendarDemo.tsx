@@ -7,7 +7,7 @@ import { calendarEvents, sampleWeek, type CalendarEvent } from "@/lib/demo-data"
 
 const startHour = 6;
 const endHour = 22;
-const rowHeight = 36;
+const rowHeight = 56;
 const hours = Array.from({ length: endHour - startHour }, (_, index) => startHour + index);
 const letters = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -61,12 +61,12 @@ export function CalendarDemo() {
         </div>
 
         <div className="hidden h-full min-h-0 flex-col rayvi:flex">
-          <div className="flex items-center gap-3 px-10 pt-6 pb-3">
-            <h3 className="text-2xl font-medium tracking-tight">2–8 Nov 2026</h3>
+          <div className="flex h-20 items-center gap-3 px-10">
+            <h3 className="text-3xl font-light tracking-tight">2–8 Nov 2026</h3>
             <p className="ml-auto font-mono text-[11px] tracking-[0.14em] text-muted">WEEK 45</p>
           </div>
-          <div className="min-h-0 flex-1 px-10 pb-8">
-            <GlassPanel className="relative flex h-full min-h-0 flex-col">
+          <div className="flex min-h-0 flex-1 gap-6 px-10 pb-8">
+            <GlassPanel className="flex h-full min-h-0 min-w-0 flex-1 flex-col">
               <div className="flex border-b border-white/10 bg-container/30">
                 <span className="w-14 shrink-0" />
                 {sampleWeek.map((item) => (
@@ -117,16 +117,16 @@ export function CalendarDemo() {
                   ))}
                 </div>
               </div>
-              {selected ? (
-                <div className="absolute inset-y-0 right-0 w-[min(340px,88%)] border-l border-white/10 bg-bg/90 p-4 backdrop-blur-md">
-                  <Detail
-                    event={selected}
-                    dayLabel={`${dayMeta?.label ?? ""} ${dayMeta?.date ?? ""} Nov`}
-                    onClose={() => setSelectedId(null)}
-                  />
-                </div>
-              ) : null}
             </GlassPanel>
+            {selected ? (
+              <div className="w-[340px] shrink-0">
+                <Detail
+                  event={selected}
+                  dayLabel={`${dayMeta?.label ?? ""} ${dayMeta?.date ?? ""} Nov`}
+                  onClose={() => setSelectedId(null)}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -181,7 +181,7 @@ function EventBlock({
 }) {
   const top = ((event.startMin - startHour * 60) / 60) * rowHeight;
   const height = Math.max(((event.endMin - event.startMin) / 60) * rowHeight, 18);
-  const chrome = height >= 48 ? "full" : height >= 28 ? "compact" : "strip";
+  const chrome = height >= 72 ? "full" : height >= 48 ? "compact" : "strip";
   return (
     <button
       type="button"

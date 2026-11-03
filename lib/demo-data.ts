@@ -234,6 +234,10 @@ export const personaTones = [
   },
 ] as const;
 
+/** Sample psyche note. Surfaces fall back to "Steady" only if this is empty. */
+export const psycheStatusLine =
+  "Quiet afternoon. Thursday's review is already on the calendar.";
+
 export function formatMoney(amount: number) {
   return amount % 1 === 0 ? `$${amount}` : `$${amount.toFixed(2)}`;
 }
