@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #131315;
+  --surface: #131315;
+  --primary: #b5c4ff;
+  --on-primary: #1d2d5f;
+  --primary-container: #7f8ec7;
+  --secondary: #e9c349;
+  --on-surface: #e5e1e4;
+  --muted: #c5c6d0;
+  --container: #0e0e10;
+  --container-mid: #1b1b1d;
+  --container-high: #201f21;
+  --hairline: rgba(229, 225, 228, 0.12);
+  --demo-accent: #b5c4ff;
+  --demo-on: #1d2d5f;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-secondary: var(--secondary);
+  --color-on-surface: var(--on-surface);
+  --color-muted: var(--muted);
+  --color-container: var(--container);
+  --color-container-mid: var(--container-mid);
+  --color-container-high: var(--container-high);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--on-surface);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .veil-in {
+    animation: veil-in 180ms ease-out;
+  }
+}
+
+@keyframes veil-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
