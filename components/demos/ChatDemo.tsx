@@ -1,12 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useLocale } from "@/components/GalleryShell";
+import { useGalleryAccent, useLocale } from "@/components/GalleryShell";
 import { GlassPanel } from "@/components/GlassPanel";
 import { RayviPortrait, RayviShell, RayviStatusLine } from "@/components/RayviShell";
+import { emoteSrc, portraitSrc, type EmoteName } from "@/lib/character";
 import { calendarEvents, sampleWeek } from "@/lib/demo-data";
 
-type ChatKey = "opening" | "lunch" | "coffee" | "brief";
+type ChatKey = "opening" | "lunch" | "coffee" | "brief" | "feeling";
 
 type ChatMessage = {
   id: string;
@@ -14,10 +15,20 @@ type ChatMessage = {
   key: ChatKey;
 };
 
-const replyKeys = ["lunch", "coffee", "brief"] as const;
+const replyKeys = ["lunch", "coffee", "brief", "feeling"] as const;
+
+const stickerFor: Record<ChatKey, EmoteName | null> = {
+  opening: "hmmmm",
+  lunch: null,
+  coffee: "happy",
+  brief: "deadpan",
+  feeling: "happy",
+};
 
 export function ChatDemo() {
-  const { t } = useLocale();
+  const { characterId } = useGalleryAccent();
+  const { locale, t } = useLocale();
+  const portrait = portraitSrc(characterId);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: "u0", role: "user", key: "opening" },
     { id: "r0", role: "rayvi", key: "opening" },
@@ -65,9 +76,18 @@ export function ChatDemo() {
         <div className="flex min-h-0 flex-1 gap-6">
           <GlassPanel className="flex min-h-0 min-w-0 flex-1 flex-col">
             <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-4 rayvi:p-6" aria-live="polite">
-              {messages.map((message) => (
-                <Bubble key={message.id} message={message} text={line(message)} />
-              ))}
+              {messages.map((message) => {
+                const sticker = message.role === "rayvi" ? stickerFor[message.key] : null;
+                return (
+                  <Bubble
+                    key={message.id}
+                    message={message}
+                    text={line(message)}
+                    stickerSrc={sticker ? emoteSrc(characterId, sticker) : null}
+                    stickerLabel={sticker ? t.persona.emotes[sticker] : ""}
+                  />
+                );
+              })}
             </div>
             <form
               className="border-t border-white/8 bg-container-high/40 p-3 rayvi:p-4"
@@ -114,11 +134,13 @@ export function ChatDemo() {
 
           <div className="hidden w-[340px] shrink-0 flex-col gap-3 rayvi:flex">
             <GlassPanel className="relative min-h-0 flex-[4]">
-              <img
-                src="/rayvi/portrait.png"
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover object-top"
-              />
+              {portrait ? (
+                <img
+                  src={portrait}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover object-top"
+                />
+              ) : null}
               <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_45%,#131315)]" />
               <div className="absolute inset-x-5 bottom-[18px]">
                 <p className="flex items-center gap-2.5 text-lg tracking-wide">
@@ -178,13 +200,20 @@ export function ChatDemo() {
         </div>
       </div>
     </RayviShell>
-    <div className="mx-auto mt-4 flex max-w-[23.5rem] flex-col gap-1 rayvi:max-w-none">
+    <div className="mx-auto mt-4 flex w-full max-w-xl flex-col gap-2">
+      <p
+        className={`font-mono text-[11px] text-muted ${
+          locale === "zh-Hant" ? "tracking-normal" : "tracking-[0.14em]"
+        }`}
+      >
+        {t.chat.suggest}
+      </p>
       {t.chat.replies.map((reply) => (
         <button
           key={reply.user}
           type="button"
           onClick={() => send(reply.user)}
-          className="text-left font-mono text-[11px] text-muted hover:text-on-surface"
+          className="w-full rounded-2xl border border-(--demo-accent)/35 bg-(--demo-accent)/10 px-4 py-3 text-left text-sm leading-snug text-on-surface hover:bg-(--demo-accent)/20"
         >
           {reply.user}
         </button>
@@ -199,20 +228,39 @@ export function ChatDemo() {
   );
 }
 
-function Bubble({ message, text }: { message: ChatMessage; text: string }) {
+function Bubble({
+  message,
+  text,
+  stickerSrc,
+  stickerLabel,
+}: {
+  message: ChatMessage;
+  text: string;
+  stickerSrc: string | null;
+  stickerLabel: string;
+}) {
   const isUser = message.role === "user";
   return (
     <div className={isUser ? "flex justify-end" : "flex items-start gap-3"}>
       {isUser ? null : <RayviPortrait size={32} className="mt-1" />}
-      <p
+      <div
         className={
           isUser
             ? "max-w-[32rem] rounded-2xl rounded-br-sm border border-(--demo-accent)/15 bg-primary-container/20 p-4 text-[15px] leading-relaxed"
             : "max-w-[32rem] rounded-2xl rounded-bl-sm border border-white/8 bg-container-high/50 p-4 text-[15px] leading-relaxed"
         }
       >
-        {text}
-      </p>
+        <p>{text}</p>
+        {stickerSrc ? (
+          <img
+            src={stickerSrc}
+            alt={stickerLabel}
+            width={160}
+            height={160}
+            className="mt-2.5 size-40 object-contain"
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

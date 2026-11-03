@@ -34,7 +34,7 @@ const en = {
     },
     persona: {
       title: "Persona",
-      lede: "Not a locked character. Appearance, tone, and habits are yours to set — then that secretary is yours.",
+      lede: "Not a locked character. Pick a set, then her moods and emotes are the art you can change.",
     },
   },
   cta: {
@@ -62,6 +62,7 @@ const en = {
     daily: "Daily review",
     week: "Current week",
     empty: "Nothing scheduled.",
+    suggest: "Tap a reply",
     nudge: "Try one of these replies. This preview only knows those lines.",
     openingUser: "Put Thursday's design review on my calendar at 3.",
     openingRayvi:
@@ -78,6 +79,10 @@ const en = {
       {
         user: "Keep the next replies brief.",
         reply: "Understood. I will stay brief.",
+      },
+      {
+        user: "How are you feeling?",
+        reply: "Pretty good. Thursday is set, and the afternoon is quiet.",
       },
     ],
   },
@@ -160,28 +165,49 @@ const en = {
   },
   persona: {
     title: "Settings",
-    appearance: "Appearance",
-    lede: "Not a locked character. Set appearance, tone, and habits — then that secretary is yours.",
-    shipped: "Shipped",
-    tone: "Tone",
-    presets: {
-      obsidian: "Obsidian",
-      amber_noir: "Amber Noir",
-      deep_sea: "Deep Sea",
+    heading: "CHARACTER & PERSONA",
+    blurb: "Pick a set, preview her art, and replace any slot with your own image.",
+    nameLabel: "Assistant name",
+    nameHelper: "One name for the header, drawer, and her persona.",
+    setProfile: "Set profile icon",
+    tabIcon: "TAB ICON",
+    tabIconHelper: "The glyph shown on the Assistant tab and in the drawer. Her profile icon stays separate.",
+    tabPreview: "Tab preview",
+    character: "CHARACTER",
+    customBlurb: "Custom starts empty. Add only the images you want; unset slots stay blank.",
+    artSlots: "ART SLOTS",
+    slotsUploaded: "{count}/16 uploaded",
+    groupSet: "{count}/{total} set",
+    filesNote: "Persona files live in the app.",
+    packs: {
+      rayvi_default: "Rayvi",
+      rayvi_red_sailor: "Sailor",
+      custom: "Custom",
     },
-    tones: {
-      brief: {
-        label: "Brief",
-        line: "Thursday, 3pm. Design review. Reminder set.",
-      },
-      warm: {
-        label: "Warm",
-        line: "Got it — Thursday at 3 for the design review. I will nudge you a little beforehand.",
-      },
-      formal: {
-        label: "Formal",
-        line: "The design review is scheduled for Thursday at 15:00, with a reminder 15 minutes prior.",
-      },
+    groups: {
+      profile: "PROFILE ICON",
+      moods: "MOODS",
+      emotes: "EMOTES",
+    },
+    profile: "Profile icon",
+    moods: {
+      idle: "Idle",
+      resting: "Resting",
+      excited: "Excited",
+      focused: "Focused",
+      confused: "Confused",
+      shy: "Shy",
+    },
+    emotes: {
+      happy: "Happy",
+      excited: "Excited",
+      shy: "Shy",
+      angry: "Angry",
+      awkward: "Awkward",
+      deadpan: "Deadpan",
+      hmmmm: "Hmmmm",
+      confuse: "Confuse",
+      sleep: "Sleep",
     },
   },
 };
@@ -218,7 +244,7 @@ const zhHant = {
     },
     persona: {
       title: "人格",
-      lede: "唔係鎖死一個 IP。外觀、語氣、習慣都可以改——改完，秘書就係「你嘅嗰個」。",
+      lede: "唔係鎖死一個 IP。揀一套角色，心情同表情都可以換成自己嘅圖。",
     },
   },
   cta: {
@@ -246,6 +272,7 @@ const zhHant = {
     daily: "今日回顧",
     week: "本週",
     empty: "沒有行程。",
+    suggest: "點一句試試",
     nudge: "請試這幾句。這個預覽只認得那些句子。",
     openingUser: "把週四下午三點的設計評審加到日曆。",
     openingRayvi: "週四 15:00–16:00。設計評審已在日曆上。我會在 15 分鐘前提醒你。",
@@ -261,6 +288,10 @@ const zhHant = {
       {
         user: "之後的回覆簡短一點。",
         reply: "知道了。我會保持簡短。",
+      },
+      {
+        user: "你感覺怎麼樣？",
+        reply: "還不錯。週四已經排好，下午很安靜。",
       },
     ],
   },
@@ -343,28 +374,49 @@ const zhHant = {
   },
   persona: {
     title: "設定",
-    appearance: "外觀",
-    lede: "唔係鎖死一個 IP。外觀、語氣、習慣都可以改——改完，秘書就係「你嘅嗰個」。",
-    shipped: "內建",
-    tone: "語氣",
-    presets: {
-      obsidian: "黑曜",
-      amber_noir: "琥珀夜",
-      deep_sea: "深海",
+    heading: "角色與人格",
+    blurb: "選擇一套角色、預覽圖片，也可以把任何欄位換成自己的圖。",
+    nameLabel: "助手名字",
+    nameHelper: "介面、側欄和人格共用同一個名字。",
+    setProfile: "設定頭像",
+    tabIcon: "分頁圖示",
+    tabIconHelper: "助理分頁和側欄顯示的圖示，跟頭像圖片是分開的。",
+    tabPreview: "分頁預覽",
+    character: "角色",
+    customBlurb: "自訂角色一開始是空的。只加入你想用的圖片，未設定的欄位保持空白。",
+    artSlots: "圖片欄位",
+    slotsUploaded: "已上載 {count}/16",
+    groupSet: "已設定 {count}/{total}",
+    filesNote: "人格檔案在 App 裡。",
+    packs: {
+      rayvi_default: "Rayvi",
+      rayvi_red_sailor: "Sailor",
+      custom: "自訂",
     },
-    tones: {
-      brief: {
-        label: "簡短",
-        line: "週四下午三點，設計評審。提醒已設定。",
-      },
-      warm: {
-        label: "溫暖",
-        line: "好，週四下午三點是設計評審。我會提前提醒你一下。",
-      },
-      formal: {
-        label: "正式",
-        line: "設計評審訂於週四 15:00，並於 15 分鐘前提醒。",
-      },
+    groups: {
+      profile: "頭像",
+      moods: "心情",
+      emotes: "表情",
+    },
+    profile: "頭像",
+    moods: {
+      idle: "空閒",
+      resting: "休息中",
+      excited: "興奮",
+      focused: "專注中",
+      confused: "困惑",
+      shy: "害羞",
+    },
+    emotes: {
+      happy: "開心",
+      excited: "興奮",
+      shy: "害羞",
+      angry: "生氣",
+      awkward: "尷尬",
+      deadpan: "面無表情",
+      hmmmm: "思考",
+      confuse: "疑惑",
+      sleep: "睡着",
     },
   },
 } satisfies typeof en;

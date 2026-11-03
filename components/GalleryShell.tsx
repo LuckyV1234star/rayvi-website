@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { type CharacterId } from "@/lib/character";
 import { copy, type Copy, type Locale } from "@/lib/copy";
 import { themePresets } from "@/lib/demo-data";
 
@@ -16,6 +17,8 @@ type Preset = (typeof themePresets)[number];
 type GalleryAccentContextValue = {
   preset: Preset;
   setPresetId: (id: Preset["id"]) => void;
+  characterId: CharacterId;
+  setCharacterId: (id: CharacterId) => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: Copy;
@@ -38,6 +41,7 @@ export function useLocale() {
 
 export function GalleryShell({ children }: { children: ReactNode }) {
   const [presetId, setPresetId] = useState<Preset["id"]>("obsidian");
+  const [characterId, setCharacterId] = useState<CharacterId>("rayvi_default");
   const [locale, setLocale] = useState<Locale>("en");
   const [localeReady, setLocaleReady] = useState(false);
   const preset = themePresets.find((item) => item.id === presetId) ?? themePresets[0];
@@ -56,7 +60,9 @@ export function GalleryShell({ children }: { children: ReactNode }) {
   }, [locale, localeReady]);
 
   return (
-    <GalleryAccentContext.Provider value={{ preset, setPresetId, locale, setLocale, t }}>
+    <GalleryAccentContext.Provider
+      value={{ preset, setPresetId, characterId, setCharacterId, locale, setLocale, t }}
+    >
       <div
         style={
           {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { useLocale } from "@/components/GalleryShell";
+import { useGalleryAccent, useLocale } from "@/components/GalleryShell";
+import { portraitSrc } from "@/lib/character";
 
 const navIds = ["assistant", "calendar", "tasks", "expenses", "health", "memory"] as const;
 
@@ -20,9 +21,20 @@ export function RayviPortrait({
   size: number;
   className?: string;
 }) {
+  const { characterId } = useGalleryAccent();
+  const src = portraitSrc(characterId);
+  if (!src) {
+    return (
+      <span
+        aria-hidden
+        className={`inline-block shrink-0 rounded-full bg-white/8 ${className}`}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
   return (
     <img
-      src="/rayvi/portrait.png"
+      src={src}
       alt=""
       width={size}
       height={size}
