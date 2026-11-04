@@ -2,7 +2,6 @@ import { CalendarDemo } from "@/components/demos/CalendarDemo";
 import { ChatDemo } from "@/components/demos/ChatDemo";
 import { ExpensesDemo } from "@/components/demos/ExpensesDemo";
 import { PersonaDemo } from "@/components/demos/PersonaDemo";
-import { Cta } from "@/components/Cta";
 import { Exhibit } from "@/components/Exhibit";
 import { Footer } from "@/components/Footer";
 import { GalleryShell } from "@/components/GalleryShell";
@@ -28,7 +27,6 @@ export default function Home() {
           <Exhibit id="expenses">
             <ExpensesDemo />
           </Exhibit>
-          <Cta />
         </main>
         <Footer />
       </div>

@@ -13,7 +13,7 @@ export function Exhibit({ id, children }: ExhibitProps) {
   const exhibit = t.exhibits[id];
 
   return (
-    <section id={id} className="scroll-mt-24 py-28 md:py-36">
+    <section id={id} className="scroll-mt-24 py-16 md:py-20">
       <div className="mx-auto max-w-5xl px-5">
         <div className="max-w-lg">
           <div className="h-px w-14 bg-(--demo-accent)/70" />
@@ -21,7 +21,12 @@ export function Exhibit({ id, children }: ExhibitProps) {
           <p className="mt-3 text-sm leading-relaxed text-muted">{exhibit.lede}</p>
         </div>
       </div>
-      <div className="relative mt-14 px-5 md:mt-16">
+      <div className="relative mt-8 px-5 md:mt-10">
+        <p className="mb-3 flex justify-end">
+          <span className="rounded-full border border-white/25 bg-bg px-2.5 py-1 font-mono text-[11px] text-on-surface">
+            {t.demo}
+          </span>
+        </p>
           <span
             aria-hidden
             className="pointer-events-none absolute top-0 left-0 h-5 w-5 border-t border-l border-(--demo-accent)/55"

@@ -12,12 +12,13 @@ const en = {
     expenses: "Expenses",
     persona: "Persona",
   },
+  demo: "Demo",
   hero: {
     kicker: "Fully customizable",
     title: "A personal secretary you fully design",
-    lede: "Tone, look, and habits are yours; calendar and expenses stay with you. Friends-only TestFlight.",
-    enter: "Enter the gallery",
-    testflight: "TestFlight",
+    lede: "Tone, look, and habits are yours; calendar and expenses stay with you. Friends-only\u00a0TestFlight.",
+    ctaPrimary: "Request TestFlight",
+    ctaSecondary: "See Persona",
   },
   exhibits: {
     chat: {
@@ -36,13 +37,6 @@ const en = {
       title: "Persona",
       lede: "Not a locked character. Pick a set, then her moods and emotes are the art you can change.",
     },
-  },
-  cta: {
-    kicker: "TestFlight",
-    title: "Friends-only, for now",
-    body: "Rayvi is a small TestFlight. Send a note if you would like a build. We will invite you when there is room.",
-    action: "Request a TestFlight invite",
-    note: "Mail goes to hello@rayvi.net. That address is a placeholder until the mailbox is ready.",
   },
   shell: {
     menu: "Open menu",
@@ -119,8 +113,8 @@ const en = {
     spent: "Spent",
     count: "Count",
     top: "Top",
-    output: "Total Output",
-    intake: "Total Intake",
+    output: "Spent",
+    intake: "Received",
     reserves: "Reserves",
     daily: "Daily usage",
     byType: "By type",
@@ -222,12 +216,13 @@ const zhHant = {
     expenses: "支出",
     persona: "人格",
   },
+  demo: "示範",
   hero: {
     kicker: "角色你話事",
     title: "完全自訂角色嘅個人秘書",
-    lede: "語氣、樣子、習慣你話事；行程同開支跟住你。Friends-only TestFlight。",
-    enter: "進入展區",
-    testflight: "TestFlight",
+    lede: "語氣、樣子、習慣你話事；行程同開支跟住你。Friends-only\u00a0TestFlight。",
+    ctaPrimary: "申請 TestFlight",
+    ctaSecondary: "睇 Persona",
   },
   exhibits: {
     chat: {
@@ -246,13 +241,6 @@ const zhHant = {
       title: "人格",
       lede: "唔係鎖死一個 IP。揀一套角色，心情同表情都可以換成自己嘅圖。",
     },
-  },
-  cta: {
-    kicker: "TestFlight",
-    title: "目前只限朋友",
-    body: "Rayvi 是小型 TestFlight。想要安裝檔的話，寄一封信。有名額時我們會邀請你。",
-    action: "索取 TestFlight 邀請",
-    note: "信件會寄到 hello@rayvi.net。信箱備妥前，這個地址只是暫代。",
   },
   shell: {
     menu: "開啟選單",

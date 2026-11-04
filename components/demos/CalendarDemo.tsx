@@ -73,7 +73,7 @@ export function CalendarDemo() {
                 <span className="w-14 shrink-0" />
                 {sampleWeek.map((item) => (
                   <span key={item.key} className="flex flex-1 flex-col items-center py-2">
-                    <span className="font-mono text-[10px] tracking-wide text-muted uppercase">
+                    <span className="max-w-full truncate px-0.5 font-mono text-[11px] text-on-surface/80">
                       {t.calendar.days[item.key]}
                     </span>
                     <span
@@ -202,11 +202,7 @@ function EventBlock({
       className="absolute inset-x-1 overflow-hidden rounded-md border border-(--demo-accent)/35 bg-(--demo-accent)/15 px-1 text-left"
       style={{ top, height }}
     >
-      {chrome === "strip" ? (
-        <span className="font-mono text-[10px]">{title.slice(0, 2)}</span>
-      ) : (
-        <span className="block truncate text-[11px] font-medium">{title}</span>
-      )}
+      <span className="block truncate text-[11px] font-medium">{title}</span>
       {chrome === "full" ? (
         <span className="block truncate font-mono text-[10px] text-muted">{event.time}</span>
       ) : null}

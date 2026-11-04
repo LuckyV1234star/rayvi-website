@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${manrope.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full bg-bg text-on-surface">{children}</body>
     </html>

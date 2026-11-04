@@ -80,7 +80,7 @@ export function RayviShell({ active, title, children }: RayviShellProps) {
   return (
     <div className="mx-auto w-full max-w-[23.5rem] rayvi:max-w-none">
       <div className="rounded-[2.4rem] border border-white/15 bg-[#08080a] p-2 rayvi:rounded-xl rayvi:border-white/10 rayvi:bg-transparent rayvi:p-0">
-        <div className="relative flex h-[40rem] min-h-[40rem] overflow-hidden rounded-[1.85rem] bg-bg rayvi:h-[64rem] rayvi:min-h-[64rem] rayvi:rounded-[11px]">
+        <div className="relative flex h-[36rem] min-h-[36rem] overflow-hidden rounded-[1.85rem] bg-bg rayvi:h-[46rem] rayvi:min-h-[46rem] rayvi:rounded-[11px]">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--demo-accent)_12%,transparent),transparent_55%)]"
