@@ -16,9 +16,13 @@ const en = {
   hero: {
     kicker: "Fully customizable",
     title: "A personal secretary you fully design",
-    lede: "Tone, look, and habits are yours; calendar and expenses stay with you. Friends-only\u00a0TestFlight.",
-    ctaPrimary: "Request TestFlight",
+    lede: "Tone, look, and habits are yours; calendar and expenses stay with you.",
+    ctaPrimary: "Get early access",
     ctaSecondary: "See Persona",
+    emailPlaceholder: "Email address",
+    signupSuccess: "Got it — we'll email you soon.",
+    signupInvalid: "Please enter a valid email.",
+    signupError: "Something went wrong. Try again.",
   },
   exhibits: {
     chat: {
@@ -220,9 +224,13 @@ const zhHant = {
   hero: {
     kicker: "角色你話事",
     title: "完全自訂角色嘅個人秘書",
-    lede: "語氣、樣子、習慣你話事；行程同開支跟住你。Friends-only\u00a0TestFlight。",
-    ctaPrimary: "申請 TestFlight",
+    lede: "語氣、樣子、習慣你話事；行程同開支跟住你。",
+    ctaPrimary: "登記試用",
     ctaSecondary: "睇 Persona",
+    emailPlaceholder: "電郵地址",
+    signupSuccess: "收到了，我們會盡快電郵聯絡你。",
+    signupInvalid: "請輸入有效電郵。",
+    signupError: "出了點問題，請再試一次。",
   },
   exhibits: {
     chat: {

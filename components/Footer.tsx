@@ -1,7 +1,7 @@
 "use client";
 
+import { EarlyAccessForm } from "@/components/EarlyAccessForm";
 import { useLocale } from "@/components/GalleryShell";
-import { TESTFLIGHT_MAILTO } from "@/lib/site";
 
 export function Footer() {
   const { t } = useLocale();
@@ -17,12 +17,7 @@ export function Footer() {
           <a href="#persona" className="text-on-surface underline decoration-(--demo-accent)/70 underline-offset-4">
             {t.hero.ctaSecondary}
           </a>
-          <a
-            href={TESTFLIGHT_MAILTO}
-            className="inline-flex min-h-11 items-center rounded-full bg-(--demo-accent) px-5 text-sm font-medium text-(--demo-on)"
-          >
-            {t.hero.ctaPrimary}
-          </a>
+          <EarlyAccessForm source="footer" />
         </div>
       </div>
     </footer>

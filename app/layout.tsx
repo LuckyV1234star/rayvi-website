@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://rayvi.net"),
   title: "Rayvi — your custom personal secretary",
   description:
-    "A secretary you design — calendar and expenses. Friends-only TestFlight.",
+    "A secretary you design — calendar and expenses.",
 };
 
 export const viewport: Viewport = {
