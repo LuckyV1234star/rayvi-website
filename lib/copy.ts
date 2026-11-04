@@ -222,32 +222,32 @@ const zhHant = {
   },
   demo: "示範",
   hero: {
-    kicker: "角色你話事",
-    title: "完全自訂角色嘅個人秘書",
-    lede: "語氣、樣子、習慣你話事；行程同開支跟住你。",
+    kicker: "角色由你決定",
+    title: "完全自訂角色的個人秘書",
+    lede: "語氣、外貌與習慣由你決定；行程與開支隨你掌握。",
     ctaPrimary: "登記",
-    ctaSecondary: "睇 Persona",
+    ctaSecondary: "看 Persona",
     emailPlaceholder: "電郵地址",
     signupSuccess: "收到了，我們會盡快電郵聯絡你。",
     signupInvalid: "請輸入有效電郵。",
-    signupError: "出了點問題，請再試一次。",
+    signupError: "出了一些問題，請再試一次。",
   },
   exhibits: {
     chat: {
       title: "對話",
-      lede: "用你設好嘅角色傾；加提醒唔使跳 app。",
+      lede: "以你設定的角色對話；新增提醒不必切換應用程式。",
     },
     calendar: {
       title: "日曆",
-      lede: "行程入去，秘書跟住提。",
+      lede: "行程寫入日曆後，秘書會隨即提醒。",
     },
     expenses: {
       title: "支出",
-      lede: "隨口記一筆，之後一眼清。",
+      lede: "一邊對話一邊記帳，之後一目了然。",
     },
     persona: {
       title: "人格",
-      lede: "唔係鎖死一個 IP。揀一套角色，心情同表情都可以換成自己嘅圖。",
+      lede: "不是鎖死一個角色。選擇一套後，心情與表情皆可換成自己的圖片。",
     },
   },
   shell: {
