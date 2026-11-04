@@ -40,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local paste / screenshot scratch
+_paste_scout/
+_shots/
+

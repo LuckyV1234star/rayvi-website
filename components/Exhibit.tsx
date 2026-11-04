@@ -21,7 +21,7 @@ export function Exhibit({ id, children }: ExhibitProps) {
           <p className="mt-3 text-sm leading-relaxed text-muted">{exhibit.lede}</p>
         </div>
       </div>
-      <div className="relative mt-8 px-5 md:mt-10">
+      <div className="relative mt-8 px-5 md:mt-10 rayvi:px-12">
         <p className="mb-3 flex justify-end">
           <span className="rounded-full border border-white/25 bg-bg px-2.5 py-1 font-mono text-[11px] text-on-surface">
             {t.demo}
