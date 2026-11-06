@@ -5,10 +5,10 @@ import { useLocale } from "@/components/GalleryShell";
 export function SiteHeader() {
   const { locale, setLocale, t } = useLocale();
   const links = [
-    { href: "#persona", label: t.nav.persona },
-    { href: "#chat", label: t.nav.chat },
-    { href: "#calendar", label: t.nav.calendar },
-    { href: "#expenses", label: t.nav.expenses },
+    { href: "/#persona", label: t.nav.persona },
+    { href: "/#chat", label: t.nav.chat },
+    { href: "/#calendar", label: t.nav.calendar },
+    { href: "/#expenses", label: t.nav.expenses },
   ];
 
   return (
@@ -20,7 +20,7 @@ export function SiteHeader() {
         {t.skip}
       </a>
       <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3">
-        <a href="#top" className="mr-auto font-medium tracking-tight text-on-surface">
+        <a href="/" className="mr-auto font-medium tracking-tight text-on-surface">
           Rayvi
         </a>
         <nav aria-label={t.onThisPage} className="flex flex-wrap gap-1">
